@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Advanced_Combat_Tracker;
+using System.Diagnostics;
 
 namespace FFXIV_Translator
 {
@@ -28,11 +21,22 @@ namespace FFXIV_Translator
             lblStatus.Text = "Plugin Started";
 
             //ActGlobals.oFormActMain.BeforeLogLineRead
+
+            Test();
         }
 
         public void DeInitPlugin()
         {
             lblStatus.Text = "No Status";
+        }
+
+        private async void Test()
+        {
+            string result = await PapagoAPI.PapagoAPI.Translate("안녕하세요", "ja");
+            Debug.WriteLine(result);
+
+            string result2 = await PapagoAPI.PapagoAPI.Detect("hi");
+            Debug.WriteLine(result2);
         }
     }
 }
