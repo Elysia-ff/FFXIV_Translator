@@ -28,11 +28,109 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.visibleCheckBox = new System.Windows.Forms.CheckBox();
+            this.dragCheckbox = new System.Windows.Forms.CheckBox();
+            this.resizeCheckbox = new System.Windows.Forms.CheckBox();
+            this.opacitySlider = new System.Windows.Forms.TrackBar();
+            this.opacityTitleLabel = new System.Windows.Forms.Label();
+            this.opacityValueLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.opacitySlider)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // visibleCheckBox
+            // 
+            this.visibleCheckBox.AutoSize = true;
+            this.visibleCheckBox.Checked = true;
+            this.visibleCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.visibleCheckBox.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.visibleCheckBox.Location = new System.Drawing.Point(15, 14);
+            this.visibleCheckBox.Name = "visibleCheckBox";
+            this.visibleCheckBox.Size = new System.Drawing.Size(61, 19);
+            this.visibleCheckBox.TabIndex = 0;
+            this.visibleCheckBox.Text = "Visible";
+            this.visibleCheckBox.UseVisualStyleBackColor = true;
+            this.visibleCheckBox.CheckedChanged += new System.EventHandler(this.VisibleCheckBox_CheckedChanged);
+            // 
+            // dragCheckbox
+            // 
+            this.dragCheckbox.AutoSize = true;
+            this.dragCheckbox.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.dragCheckbox.Location = new System.Drawing.Point(39, 51);
+            this.dragCheckbox.Name = "dragCheckbox";
+            this.dragCheckbox.Size = new System.Drawing.Size(81, 19);
+            this.dragCheckbox.TabIndex = 1;
+            this.dragCheckbox.Text = "Draggable";
+            this.dragCheckbox.UseVisualStyleBackColor = true;
+            this.dragCheckbox.CheckedChanged += new System.EventHandler(this.DragCheckbox_CheckedChanged);
+            // 
+            // resizeCheckbox
+            // 
+            this.resizeCheckbox.AutoSize = true;
+            this.resizeCheckbox.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.resizeCheckbox.Location = new System.Drawing.Point(39, 85);
+            this.resizeCheckbox.Name = "resizeCheckbox";
+            this.resizeCheckbox.Size = new System.Drawing.Size(75, 19);
+            this.resizeCheckbox.TabIndex = 3;
+            this.resizeCheckbox.Text = "Resizable";
+            this.resizeCheckbox.UseVisualStyleBackColor = true;
+            this.resizeCheckbox.CheckedChanged += new System.EventHandler(this.ResizeCheckbox_CheckedChanged);
+            // 
+            // opacitySlider
+            // 
+            this.opacitySlider.LargeChange = 10;
+            this.opacitySlider.Location = new System.Drawing.Point(91, 123);
+            this.opacitySlider.Maximum = 100;
+            this.opacitySlider.Name = "opacitySlider";
+            this.opacitySlider.Size = new System.Drawing.Size(239, 45);
+            this.opacitySlider.TabIndex = 5;
+            this.opacitySlider.TickFrequency = 10;
+            this.opacitySlider.Scroll += new System.EventHandler(this.OpacitySlider_Scroll);
+            // 
+            // opacityTitleLabel
+            // 
+            this.opacityTitleLabel.AutoSize = true;
+            this.opacityTitleLabel.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.opacityTitleLabel.Location = new System.Drawing.Point(37, 123);
+            this.opacityTitleLabel.Name = "opacityTitleLabel";
+            this.opacityTitleLabel.Size = new System.Drawing.Size(48, 15);
+            this.opacityTitleLabel.TabIndex = 4;
+            this.opacityTitleLabel.Text = "Opacity";
+            // 
+            // opacityValueLabel
+            // 
+            this.opacityValueLabel.AutoSize = true;
+            this.opacityValueLabel.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.opacityValueLabel.Location = new System.Drawing.Point(336, 123);
+            this.opacityValueLabel.Name = "opacityValueLabel";
+            this.opacityValueLabel.Size = new System.Drawing.Size(38, 15);
+            this.opacityValueLabel.TabIndex = 6;
+            this.opacityValueLabel.Text = "100%";
+            // 
+            // FFXIV_Translator
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.opacityValueLabel);
+            this.Controls.Add(this.opacityTitleLabel);
+            this.Controls.Add(this.opacitySlider);
+            this.Controls.Add(this.resizeCheckbox);
+            this.Controls.Add(this.dragCheckbox);
+            this.Controls.Add(this.visibleCheckBox);
+            this.Name = "FFXIV_Translator";
+            this.Size = new System.Drawing.Size(800, 450);
+            ((System.ComponentModel.ISupportInitialize)(this.opacitySlider)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
+
+        private System.Windows.Forms.CheckBox visibleCheckBox;
+        private System.Windows.Forms.CheckBox dragCheckbox;
+        private System.Windows.Forms.CheckBox resizeCheckbox;
+        private System.Windows.Forms.TrackBar opacitySlider;
+        private System.Windows.Forms.Label opacityTitleLabel;
+        private System.Windows.Forms.Label opacityValueLabel;
     }
 }

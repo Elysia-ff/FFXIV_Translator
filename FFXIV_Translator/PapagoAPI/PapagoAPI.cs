@@ -32,6 +32,7 @@ namespace FFXIV_Translator.PapagoAPI
                 {
                     string result = await streamReader.ReadToEndAsync();
                     JObject jObject = JObject.Parse(result);
+
                     return jObject["message"]["result"]["translatedText"].ToString();
                     //{"message":{"@type":"response","@service":"naverservice.nmt.proxy","@version":"1.0.0","result":{"srcLangType":"ko","tarLangType":"en","translatedText":"Hello","engineType":"PRETRANS","pivot":null}}}
                 }
