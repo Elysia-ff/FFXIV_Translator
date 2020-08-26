@@ -42,7 +42,10 @@ namespace FFXIV_Translator
             this.langBtn = new System.Windows.Forms.Button();
             this.executeBtn = new System.Windows.Forms.Button();
             this.textPanel = new System.Windows.Forms.Panel();
+            this.chatPanel = new System.Windows.Forms.Panel();
+            this.chatParent = new System.Windows.Forms.Panel();
             this.textPanel.SuspendLayout();
+            this.chatParent.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox
@@ -74,6 +77,7 @@ namespace FFXIV_Translator
             this.langBtn.TabIndex = 1;
             this.langBtn.Text = "EN";
             this.langBtn.UseVisualStyleBackColor = false;
+            this.langBtn.Click += new System.EventHandler(this.LangBtn_Click);
             // 
             // executeBtn
             // 
@@ -82,9 +86,10 @@ namespace FFXIV_Translator
             this.executeBtn.Image = global::FFXIV_Translator.Properties.Resources.enter_key_cutout;
             this.executeBtn.Location = new System.Drawing.Point(420, 222);
             this.executeBtn.Name = "executeBtn";
-            this.executeBtn.Size = new System.Drawing.Size(36, 23);
+            this.executeBtn.Size = new System.Drawing.Size(35, 23);
             this.executeBtn.TabIndex = 2;
             this.executeBtn.UseVisualStyleBackColor = true;
+            this.executeBtn.Click += new System.EventHandler(this.ExecuteBtn_Click);
             // 
             // textPanel
             // 
@@ -95,12 +100,31 @@ namespace FFXIV_Translator
             this.textPanel.Size = new System.Drawing.Size(370, 23);
             this.textPanel.TabIndex = 3;
             // 
+            // chatPanel
+            // 
+            this.chatPanel.AutoScrollMargin = new System.Drawing.Size(0, 2);
+            this.chatPanel.Location = new System.Drawing.Point(0, 0);
+            this.chatPanel.Name = "chatPanel";
+            this.chatPanel.Size = new System.Drawing.Size(450, 210);
+            this.chatPanel.TabIndex = 4;
+            this.chatPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.chatPanel_MouseDown);
+            this.chatPanel.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ChatPanel_MouseWheel);
+            // 
+            // chatParent
+            // 
+            this.chatParent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.chatParent.Controls.Add(this.chatPanel);
+            this.chatParent.Location = new System.Drawing.Point(5, 5);
+            this.chatParent.Name = "chatParent";
+            this.chatParent.Size = new System.Drawing.Size(450, 210);
+            this.chatParent.TabIndex = 5;
             // ChatWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(460, 250);
+            this.Controls.Add(this.chatParent);
             this.Controls.Add(this.textPanel);
             this.Controls.Add(this.executeBtn);
             this.Controls.Add(this.langBtn);
@@ -122,7 +146,9 @@ namespace FFXIV_Translator
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChatWindow_MouseDown);
             this.textPanel.ResumeLayout(false);
             this.textPanel.PerformLayout();
+            this.chatParent.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -132,5 +158,7 @@ namespace FFXIV_Translator
         private System.Windows.Forms.Button langBtn;
         private System.Windows.Forms.Button executeBtn;
         private System.Windows.Forms.Panel textPanel;
+        private System.Windows.Forms.Panel chatPanel;
+        private System.Windows.Forms.Panel chatParent;
     }
 }

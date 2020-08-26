@@ -60,6 +60,7 @@
     <Compile Include="ChatWindow.Designer.cs">
       <DependentUpon>ChatWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="SuspendLayoutScope.cs" />
     <Compile Include="FFXIV_Translator.cs">
       <SubType>UserControl</SubType>
     </Compile>

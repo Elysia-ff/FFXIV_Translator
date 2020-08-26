@@ -2,6 +2,7 @@
 using Advanced_Combat_Tracker;
 using System.Diagnostics;
 using FFXIV_Translator.Properties;
+using FFXIV_Translator.PapagoAPIs;
 
 namespace FFXIV_Translator
 {
@@ -41,15 +42,6 @@ namespace FFXIV_Translator
         {
             lblStatus.Text = "No Status";
             chatWindow.Hide();
-        }
-
-        private async void Test()
-        {
-            string result = await PapagoAPI.PapagoAPI.Translate("안녕하세요", "ja");
-            Debug.WriteLine(result);
-
-            string result2 = await PapagoAPI.PapagoAPI.Detect("hi");
-            Debug.WriteLine(result2);
         }
 
         private void VisibleCheckBox_CheckedChanged(object sender, System.EventArgs e)

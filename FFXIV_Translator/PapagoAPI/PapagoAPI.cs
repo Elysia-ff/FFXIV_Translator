@@ -1,18 +1,36 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FFXIV_Translator.PapagoAPI
+namespace FFXIV_Translator.PapagoAPIs
 {
     public class PapagoAPI
     {
         private static readonly string clientID = "<your client id>";
         private static readonly string clientSecret = "<your client secret>";
 
-        public static async Task<string> Translate(string text, string source, string target)
+        public enum LangCode
         {
+            None = -1,
+            KR,
+            EN,
+            JP,
+
+            Count
+        }
+
+        public static async Task<string> Translate(string text, LangCode source, LangCode target)
+        {
+            return await Translate(text, LangCodeToString(source), LangCodeToString(target));
+        }
+
+        private static async Task<string> Translate(string text, string source, string target)
+        {
+            text = text.Replace("\r\n", " \\n ");
+
             HttpWebRequest request = WebRequest.Create("https://openapi.naver.com/v1/papago/n2mt") as HttpWebRequest;
             request.Headers.Add("X-Naver-Client-Id", clientID);
             request.Headers.Add("X-Naver-Client-Secret", clientSecret);
@@ -33,7 +51,7 @@ namespace FFXIV_Translator.PapagoAPI
                     string result = await streamReader.ReadToEndAsync();
                     JObject jObject = JObject.Parse(result);
 
-                    return jObject["message"]["result"]["translatedText"].ToString();
+                    return jObject["message"]["result"]["translatedText"].ToString().Replace(" \\n ", "\n");
                     //{"message":{"@type":"response","@service":"naverservice.nmt.proxy","@version":"1.0.0","result":{"srcLangType":"ko","tarLangType":"en","translatedText":"Hello","engineType":"PRETRANS","pivot":null}}}
                 }
             }
@@ -51,16 +69,23 @@ namespace FFXIV_Translator.PapagoAPI
             }
         }
 
-        public static async Task<string> Translate(string text, string target)
+        public static async Task<string> Translate(string text, LangCode target)
+        {
+            return await Translate(text, LangCodeToString(target));
+        }
+
+        private static async Task<string> Translate(string text, string target)
         {
             string source = await Detect(text);
-            if (source.Equals(target))
+            if (source.Equals(target) || source.Equals("unk"))
+                return text;
+            if (!TryStringToLangCode(source, out LangCode code))
                 return text;
 
             return await Translate(text, source, target);
         }
 
-        public static async Task<string> Detect(string text)
+        private static async Task<string> Detect(string text)
         {
             HttpWebRequest request = WebRequest.Create("https://openapi.naver.com/v1/papago/detectLangs") as HttpWebRequest;
             request.Headers.Add("X-Naver-Client-Id", clientID);
@@ -98,6 +123,52 @@ namespace FFXIV_Translator.PapagoAPI
                     return e.Message;
                 }
             }
+        }
+
+        public static string LangCodeToString(LangCode code)
+        {
+            switch (code)
+            {
+                case LangCode.KR:
+                    return "ko";
+                case LangCode.EN:
+                    return "en";
+                case LangCode.JP:
+                    return "ja";
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static LangCode StringToLangCode(string str)
+        {
+            str = str.ToLower();
+            switch (str)
+            {
+                case "ko":
+                    return LangCode.KR;
+                case "en":
+                    return LangCode.EN;
+                case "ja":
+                    return LangCode.JP;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static bool TryStringToLangCode(string str, out LangCode code)
+        {
+            try
+            {
+                code = StringToLangCode(str);
+            }
+            catch
+            {
+                code = LangCode.None;
+                return false;
+            }
+
+            return true;
         }
     }
 }
