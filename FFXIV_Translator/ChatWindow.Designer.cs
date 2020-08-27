@@ -43,8 +43,12 @@ namespace FFXIV_Translator
             this.executeBtn = new System.Windows.Forms.Button();
             this.textPanel = new System.Windows.Forms.Panel();
             this.chatPanel = new System.Windows.Forms.Panel();
+            this.scrollBarPanel = new System.Windows.Forms.Panel();
+            this.scrollBar = new System.Windows.Forms.Panel();
             this.chatParent = new System.Windows.Forms.Panel();
             this.textPanel.SuspendLayout();
+            this.chatPanel.SuspendLayout();
+            this.scrollBarPanel.SuspendLayout();
             this.chatParent.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,12 +107,34 @@ namespace FFXIV_Translator
             // chatPanel
             // 
             this.chatPanel.AutoScrollMargin = new System.Drawing.Size(0, 2);
+            this.chatPanel.Controls.Add(this.scrollBarPanel);
             this.chatPanel.Location = new System.Drawing.Point(0, 0);
             this.chatPanel.Name = "chatPanel";
             this.chatPanel.Size = new System.Drawing.Size(450, 210);
             this.chatPanel.TabIndex = 4;
             this.chatPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.chatPanel_MouseDown);
             this.chatPanel.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ChatPanel_MouseWheel);
+            // 
+            // scrollBarPanel
+            // 
+            this.scrollBarPanel.BackColor = System.Drawing.Color.Black;
+            this.scrollBarPanel.Controls.Add(this.scrollBar);
+            this.scrollBarPanel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.scrollBarPanel.Location = new System.Drawing.Point(440, 0);
+            this.scrollBarPanel.Name = "scrollBarPanel";
+            this.scrollBarPanel.Size = new System.Drawing.Size(10, 210);
+            this.scrollBarPanel.TabIndex = 0;
+            this.scrollBarPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScrollBarPanel_MouseDown);
+            this.scrollBarPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScrollBarPanel_MouseMove);
+            // 
+            // scrollBar
+            // 
+            this.scrollBar.BackColor = System.Drawing.Color.White;
+            this.scrollBar.Location = new System.Drawing.Point(0, 0);
+            this.scrollBar.Name = "scrollBar";
+            this.scrollBar.Size = new System.Drawing.Size(10, 50);
+            this.scrollBar.TabIndex = 0;
+            this.scrollBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScrollBar_MouseMove);
             // 
             // chatParent
             // 
@@ -118,6 +144,7 @@ namespace FFXIV_Translator
             this.chatParent.Name = "chatParent";
             this.chatParent.Size = new System.Drawing.Size(450, 210);
             this.chatParent.TabIndex = 5;
+            // 
             // ChatWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -146,9 +173,10 @@ namespace FFXIV_Translator
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChatWindow_MouseDown);
             this.textPanel.ResumeLayout(false);
             this.textPanel.PerformLayout();
+            this.chatPanel.ResumeLayout(false);
+            this.scrollBarPanel.ResumeLayout(false);
             this.chatParent.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -160,5 +188,7 @@ namespace FFXIV_Translator
         private System.Windows.Forms.Panel textPanel;
         private System.Windows.Forms.Panel chatPanel;
         private System.Windows.Forms.Panel chatParent;
+        private System.Windows.Forms.Panel scrollBarPanel;
+        private System.Windows.Forms.Panel scrollBar;
     }
 }
