@@ -10,12 +10,14 @@ namespace FFXIV_Translator
     public partial class ChatWindow : Form
     {
         private bool isActivated = false;
-        private List<Label> chats = new List<Label>();
+        private LabelPool labelPool;
+        private List<Chat> chats = new List<Chat>();
         private int scrollPosition = 0;
-        private const int scrollMargin = 2;
-        private const int scrollDelta = 10;
-        private const int minScrollPosition = 0;
-        private const int scrollBarWidth = 10;
+        private int prevScrollPosition = 0;
+        public const int scrollMargin = 2;
+        public const int scrollDelta = 10;
+        public const int minScrollPosition = 0;
+        public const int scrollBarWidth = 10;
 
         private int MaxScrollPosition { get { return Math.Max(GetTotalHeight() - chatPanel.Height + scrollMargin, minScrollPosition); } }
 
@@ -73,40 +75,23 @@ namespace FFXIV_Translator
             InitializeComponent();
 
             SetStyle(ControlStyles.ResizeRedraw, true);
+            labelPool = new LabelPool(chatPanel);
             UpdateLangBtn();
         }
 
-        private void AddChat(string msg)
+        private void AddChat(string msg, bool reposition = true)
         {
-            using (new SuspendLayoutScope(chatPanel, true))
-            {
-                Label newLabel = new Label();
-                using (new SuspendLayoutScope(newLabel, false))
-                {
-                    Size size = GetTextSize(msg);
-                    int y = chatPanel.Height - scrollMargin - size.Height;
+            if (string.IsNullOrEmpty(msg))
+                return;
 
-                    newLabel.BorderStyle = BorderStyle.FixedSingle;
-                    newLabel.Location = new Point(0, y);
-                    newLabel.Font = Font;
-                    newLabel.Size = size;
-                    newLabel.TextAlign = ContentAlignment.MiddleLeft;
-                    newLabel.Text = msg;
-                    newLabel.MouseDoubleClick += delegate(object sender, MouseEventArgs e)
-                    {
-                        Label label = sender as Label;
-                        string text = label.Text.Replace("\n", "\r\n");
-                        Clipboard.SetText(text);
-                    };
+            Chat newChat = new Chat(msg, GetTextSize(msg));
+            chats.Insert(0, newChat);
 
-                    chatPanel.Controls.Add(newLabel);
-                    chats.Insert(0, newLabel);
-                    scrollPosition = minScrollPosition;
-
-                    Reposition();
-                    UpdateScrollBarSize();
-                }
-            }
+            scrollPosition = minScrollPosition;
+            prevScrollPosition = scrollPosition;
+            if (reposition)
+                Reposition();
+            UpdateScrollBarSize();
         }
 
         private Size GetTextSize(string msg)
@@ -136,27 +121,31 @@ namespace FFXIV_Translator
         {
             using (new SuspendLayoutScope(chatPanel, true))
             {
+                labelPool.StartReposition();
                 int prevY = 0;
+
                 for (int i = 0; i < chats.Count; ++i)
                 {
-                    using (new SuspendLayoutScope(chats[i], false))
-                    {
-                        int y = i > 0 ?
-                            prevY - chats[i].Height :
-                            chatPanel.Height + scrollPosition - scrollMargin - chats[i].Height;
-                        prevY = y;
+                    int y = i > 0 ?
+                        prevY - chats[i].Height :
+                        chatPanel.Height + scrollPosition - scrollMargin - chats[i].Height;
+                    prevY = y;
 
-                        if (y + chats[i].Height >= 0 && y <= chatPanel.Height)
+                    int upperThreshold = y + chats[i].Height;
+                    if (upperThreshold >= 0 && y <= chatPanel.Height)
+                    {
+                        Label label = labelPool.GetLabel();
+                        using (new SuspendLayoutScope(label, false))
                         {
-                            chats[i].Location = new Point(chats[i].Location.X, y);
-                            chats[i].Visible = true;
-                        }
-                        else
-                        {
-                            chats[i].Visible = false;
+                            label.Location = new Point(0, y);
+                            label.Size = chats[i].Size;
+                            label.Text = chats[i].Str;
                         }
                     }
+                    else if (upperThreshold < 0)
+                        break;
                 }
+                labelPool.EndReposition();
             }
         }
 
@@ -189,10 +178,9 @@ namespace FFXIV_Translator
 
                         for (int i = 0; i < chats.Count; ++i)
                         {
-                            using (new SuspendLayoutScope(chats[i], false))
-                            {
-                                chats[i].Size = new Size(chatPanel.Width - scrollMargin - scrollBarWidth, chats[i].Height);
-                            }
+                            Chat c = chats[i];
+                            c.Size = GetTextSize(chats[i].Str);
+                            chats[i] = c;
                         }
 
                         using (new SuspendLayoutScope(scrollBarPanel, false))
@@ -254,33 +242,37 @@ namespace FFXIV_Translator
                 scrollPosition = minScrollPosition;
             if (scrollPosition > maxScrollPosition)
                 scrollPosition = maxScrollPosition;
+            prevScrollPosition = scrollPosition;
 
             Reposition();
             UpdateScrollBarPosition();
         }
 
-        private void chatPanel_MouseDown(object sender, MouseEventArgs e)
+#if DEBUG
+        private void ChatPanel_MouseDown(object sender, MouseEventArgs e)
         {
             // test code 
-            //return;
+            return;
             Random random = new Random();
-            for (int i = 0; i < 10; ++i)
+            int count = 5000;
+            for (int i = 1; i <= count; ++i)
             {
                 int r = random.Next(3);
                 if (r == 0)
                 {
-                    AddChat("test string" + i);
+                    AddChat("test string" + i, i == count);
                 }
                 else if (r == 1)
                 {
-                    AddChat("test stringdddddddddddddddddddddddddddddddddddddddddddddd" + i);
+                    AddChat("test stringdddddddddddddddddddddddddddddddddddddddddddddd" + i, i == count);
                 }
                 else if (r == 2)
                 {
-                    AddChat("test string\nasdfasdf\nassf" + i);
+                    AddChat("test string\nasdfasdf\nassf" + i, i == count);
                 }
             }
         }
+#endif
 
         private void LangBtn_Click(object sender, EventArgs e)
         {
@@ -308,23 +300,28 @@ namespace FFXIV_Translator
         {
             if (e.Button == MouseButtons.Left)
             {
-                using (new SuspendLayoutScope(scrollBar, false))
+                Point point = scrollBar.Location;
+                point.Y = scrollBarPanel.PointToClient(Cursor.Position).Y - (int)(scrollBar.Height * 0.5f);
+                if (point.Y < 0)
+                    point.Y = 0;
+                else if (point.Y + scrollBar.Height > scrollBarPanel.Height)
+                    point.Y = scrollBarPanel.Height - scrollBar.Height;
+
+                float t = 1 - (float)point.Y / (scrollBarPanel.Height - scrollBar.Height);
+                if (float.IsNaN(t)) t = 1;
+                int newScrollPosition = (int)Math.Ceiling(MathExtension.Lerp(minScrollPosition, MaxScrollPosition, t));
+
+                if (MathExtension.Distance(newScrollPosition, prevScrollPosition) >= scrollDelta)
                 {
-                    Point point = scrollBar.Location;
-                    point.Y = scrollBarPanel.PointToClient(Cursor.Position).Y - (int)(scrollBar.Height * 0.5f);
-                    if (point.Y < 0)
-                        point.Y = 0;
-                    else if (point.Y + scrollBar.Height > scrollBarPanel.Height)
-                        point.Y = scrollBarPanel.Height - scrollBar.Height;
+                    using (new SuspendLayoutScope(scrollBar, false))
+                    {
+                        scrollBar.Location = point;
+                    }
+                    scrollPosition = newScrollPosition;
+                    prevScrollPosition = scrollPosition;
 
-                    scrollBar.Location = point;
+                    Reposition();
                 }
-
-                float t = 1 - (float)scrollBar.Location.Y / (scrollBarPanel.Height - scrollBar.Height);
-                if (float.IsNaN(t))
-                    t = 1;
-                scrollPosition = (int)Math.Ceiling(MathExtension.Lerp(minScrollPosition, MaxScrollPosition, t));
-                Reposition();
             }
         }
 
@@ -333,8 +330,7 @@ namespace FFXIV_Translator
             using (new SuspendLayoutScope(scrollBar, false))
             {
                 float t = 1 - (float)scrollPosition / MaxScrollPosition;
-                if (float.IsNaN(t))
-                    t = 1;
+                if (float.IsNaN(t)) t = 1;
                 int v = (int)Math.Ceiling(MathExtension.Lerp(0, scrollBarPanel.Height - scrollBar.Height, t));
 
                 Point point = scrollBar.Location;
@@ -353,8 +349,7 @@ namespace FFXIV_Translator
                 if (panelHeight <= chatHeight)
                 {
                     float t = (float)panelHeight / chatHeight;
-                    if (float.IsNaN(t))
-                        t = 1;
+                    if (float.IsNaN(t)) t = 1;
                     v = (int)Math.Ceiling(MathExtension.Lerp(0, panelHeight, t));
                 }
                 else
@@ -363,7 +358,7 @@ namespace FFXIV_Translator
                 }
 
                 Size size = scrollBar.Size;
-                size.Height = v;
+                size.Height = Math.Max(v, 5);
                 scrollBar.Size = size;
             }
 

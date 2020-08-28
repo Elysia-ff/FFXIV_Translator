@@ -112,7 +112,9 @@ namespace FFXIV_Translator
             this.chatPanel.Name = "chatPanel";
             this.chatPanel.Size = new System.Drawing.Size(450, 210);
             this.chatPanel.TabIndex = 4;
-            this.chatPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.chatPanel_MouseDown);
+#if DEBUG
+            this.chatPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChatPanel_MouseDown);
+#endif
             this.chatPanel.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ChatPanel_MouseWheel);
             // 
             // scrollBarPanel
@@ -186,9 +188,9 @@ namespace FFXIV_Translator
         private System.Windows.Forms.Button langBtn;
         private System.Windows.Forms.Button executeBtn;
         private System.Windows.Forms.Panel textPanel;
-        private System.Windows.Forms.Panel chatPanel;
         private System.Windows.Forms.Panel chatParent;
         private System.Windows.Forms.Panel scrollBarPanel;
         private System.Windows.Forms.Panel scrollBar;
+        private System.Windows.Forms.Panel chatPanel;
     }
 }

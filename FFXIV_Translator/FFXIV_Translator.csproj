@@ -54,12 +54,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chat.cs" />
     <Compile Include="ChatWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ChatWindow.Designer.cs">
       <DependentUpon>ChatWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="LabelPool.cs" />
     <Compile Include="MathExtension.cs" />
     <Compile Include="SuspendLayoutScope.cs" />
     <Compile Include="FFXIV_Translator.cs">

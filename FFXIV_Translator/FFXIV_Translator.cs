@@ -1,8 +1,6 @@
 ﻿using System.Windows.Forms;
 using Advanced_Combat_Tracker;
-using System.Diagnostics;
 using FFXIV_Translator.Properties;
-using FFXIV_Translator.PapagoAPIs;
 
 namespace FFXIV_Translator
 {

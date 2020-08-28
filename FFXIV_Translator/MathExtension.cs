@@ -17,5 +17,10 @@ namespace FFXIV_Translator
 
             return (int)(a + (b - a) * t);
         }
+
+        public static int Distance(int a, int b)
+        {
+            return a > b ? a - b : a < b ? b - a : 0;
+        }
     }
 }
