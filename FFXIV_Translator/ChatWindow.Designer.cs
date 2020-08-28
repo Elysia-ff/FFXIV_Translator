@@ -61,6 +61,7 @@ namespace FFXIV_Translator
             this.textBox.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.textBox.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Bold);
             this.textBox.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.textBox.ImeMode = System.Windows.Forms.ImeMode.On;
             this.textBox.Location = new System.Drawing.Point(0, 0);
             this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
