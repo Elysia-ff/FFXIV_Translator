@@ -24,7 +24,14 @@ namespace FFXIV_Translator.PapagoAPIs
 
         public static async Task<string> Translate(string text, LangCode source, LangCode target)
         {
-            return await Translate(text, LangCodeToString(source), LangCodeToString(target));
+            try
+            {
+                return await Translate(text, LangCodeToString(source), LangCodeToString(target));
+            }
+            catch (PapagoAPIException e)
+            {
+                return e.Message;
+            }
         }
 
         private static async Task<string> Translate(string text, string source, string target)
@@ -60,29 +67,43 @@ namespace FFXIV_Translator.PapagoAPIs
                 HttpWebResponse response = e.Response as HttpWebResponse;
                 if ((int)response.StatusCode == 429)
                 {
-                    return "하루 or 초당 호출 한도를 초과했습니다.";
+                    throw new PapagoAPIException("하루 or 초당 호출 한도를 초과했습니다.");
                 }
                 else
                 {
-                    return e.Message;
+                    throw new PapagoAPIException(e.Message);
                 }
             }
         }
 
         public static async Task<string> Translate(string text, LangCode target)
         {
-            return await Translate(text, LangCodeToString(target));
+            try
+            {
+                return await Translate(text, LangCodeToString(target));
+            }
+            catch (PapagoAPIException e)
+            {
+                return e.Message;
+            }
         }
 
         private static async Task<string> Translate(string text, string target)
         {
-            string source = await Detect(text);
-            if (source.Equals(target) || source.Equals("unk"))
-                return text;
-            if (!TryStringToLangCode(source, out LangCode code))
-                return text;
+            try
+            {
+                string source = await Detect(text);
+                if (source.Equals(target) || source.Equals("unk"))
+                    return text;
+                if (!TryStringToLangCode(source, out LangCode code))
+                    return text;
 
-            return await Translate(text, source, target);
+                return await Translate(text, source, target);
+            }
+            catch (PapagoAPIException e)
+            {
+                return e.Message;
+            }
         }
 
         private static async Task<string> Detect(string text)
@@ -116,11 +137,11 @@ namespace FFXIV_Translator.PapagoAPIs
                 HttpWebResponse response = e.Response as HttpWebResponse;
                 if ((int)response.StatusCode == 429)
                 {
-                    return "하루 or 초당 호출 한도를 초과했습니다.";
+                    throw new PapagoAPIException("하루 or 초당 호출 한도를 초과했습니다.");
                 }
                 else
                 {
-                    return e.Message;
+                    throw new PapagoAPIException(e.Message);
                 }
             }
         }

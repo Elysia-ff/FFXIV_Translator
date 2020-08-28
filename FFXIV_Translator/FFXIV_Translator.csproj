@@ -63,6 +63,7 @@
     </Compile>
     <Compile Include="LabelPool.cs" />
     <Compile Include="MathExtension.cs" />
+    <Compile Include="PapagoAPI\PapagoAPIException.cs" />
     <Compile Include="SuspendLayoutScope.cs" />
     <Compile Include="FFXIV_Translator.cs">
       <SubType>UserControl</SubType>
