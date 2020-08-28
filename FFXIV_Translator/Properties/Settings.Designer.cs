@@ -94,5 +94,17 @@ namespace FFXIV_Translator.Properties {
                 this["Size"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LangCode {
+            get {
+                return ((int)(this["LangCode"]));
+            }
+            set {
+                this["LangCode"] = value;
+            }
+        }
     }
 }

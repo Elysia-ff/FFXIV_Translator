@@ -76,6 +76,10 @@ namespace FFXIV_Translator
 
             SetStyle(ControlStyles.ResizeRedraw, true);
             labelPool = new LabelPool(chatPanel);
+            int savedCode = Settings.Default.LangCode;
+            if (savedCode < 0 || savedCode >= (int)PapagoAPI.LangCode.Count)
+                savedCode = 0;
+            langCode = (PapagoAPI.LangCode)savedCode;
             UpdateLangBtn();
         }
 
@@ -281,6 +285,8 @@ namespace FFXIV_Translator
                 langCode = 0;
 
             UpdateLangBtn();
+            Settings.Default.LangCode = (int)langCode;
+            Settings.Default.Save();
         }
 
         private void UpdateLangBtn()
