@@ -153,6 +153,19 @@ namespace FFXIV_Translator
             }
         }
 
+        public void UpdateOpacity()
+        {
+            if (isActivated)
+            {
+                Opacity = 1;
+            }
+            else
+            {
+                int opacity = Settings.Default.Opacity;
+                Opacity = opacity * 0.01d;
+            }
+        }
+
         private void ChatWindow_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && Settings.Default.Draggable)
@@ -218,12 +231,16 @@ namespace FFXIV_Translator
         private void ChatWindow_Activated(object sender, EventArgs e)
         {
             isActivated = true;
+
+            UpdateOpacity();
             Refresh();
         }
 
         private void ChatWindow_Deactivate(object sender, EventArgs e)
         {
             isActivated = false;
+
+            UpdateOpacity();
             Refresh();
         }
 

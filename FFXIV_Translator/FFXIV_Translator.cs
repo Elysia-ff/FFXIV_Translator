@@ -67,10 +67,11 @@ namespace FFXIV_Translator
         private void OpacitySlider_Scroll(object sender, System.EventArgs e)
         {
             int opacity = opacitySlider.Value;
-            chatWindow.Opacity = opacity * 0.01d;
             opacityValueLabel.Text = opacity + "%";
             Settings.Default.Opacity = opacity;
             Settings.Default.Save();
+
+            chatWindow.UpdateOpacity();
         }
     }
 }
