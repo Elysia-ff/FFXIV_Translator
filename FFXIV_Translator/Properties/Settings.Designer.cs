@@ -106,5 +106,29 @@ namespace FFXIV_Translator.Properties {
                 this["LangCode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FFEvent {
+            get {
+                return ((bool)(this["FFEvent"]));
+            }
+            set {
+                this["FFEvent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FFParty {
+            get {
+                return ((bool)(this["FFParty"]));
+            }
+            set {
+                this["FFParty"] = value;
+            }
+        }
     }
 }

@@ -61,6 +61,7 @@
     <Compile Include="ChatWindow.Designer.cs">
       <DependentUpon>ChatWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="FFChatCode.cs" />
     <Compile Include="LabelPool.cs" />
     <Compile Include="MathExtension.cs" />
     <Compile Include="PapagoAPI\PapagoAPIException.cs" />

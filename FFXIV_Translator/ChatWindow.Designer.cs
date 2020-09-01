@@ -68,7 +68,6 @@ namespace FFXIV_Translator
             this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox.Size = new System.Drawing.Size(387, 23);
             this.textBox.TabIndex = 0;
-            this.textBox.Text = "Insert here";
             // 
             // langBtn
             // 

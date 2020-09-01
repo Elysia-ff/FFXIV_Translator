@@ -34,7 +34,11 @@
             this.opacitySlider = new System.Windows.Forms.TrackBar();
             this.opacityTitleLabel = new System.Windows.Forms.Label();
             this.opacityValueLabel = new System.Windows.Forms.Label();
+            this.ffChatGroup = new System.Windows.Forms.GroupBox();
+            this.partyChatCheckbox = new System.Windows.Forms.CheckBox();
+            this.eventChatCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.opacitySlider)).BeginInit();
+            this.ffChatGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // visibleCheckBox
@@ -43,7 +47,8 @@
             this.visibleCheckBox.Checked = true;
             this.visibleCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.visibleCheckBox.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.visibleCheckBox.Location = new System.Drawing.Point(15, 14);
+            this.visibleCheckBox.Location = new System.Drawing.Point(15, 18);
+            this.visibleCheckBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.visibleCheckBox.Name = "visibleCheckBox";
             this.visibleCheckBox.Size = new System.Drawing.Size(61, 19);
             this.visibleCheckBox.TabIndex = 0;
@@ -55,7 +60,8 @@
             // 
             this.dragCheckbox.AutoSize = true;
             this.dragCheckbox.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.dragCheckbox.Location = new System.Drawing.Point(39, 51);
+            this.dragCheckbox.Location = new System.Drawing.Point(39, 64);
+            this.dragCheckbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dragCheckbox.Name = "dragCheckbox";
             this.dragCheckbox.Size = new System.Drawing.Size(81, 19);
             this.dragCheckbox.TabIndex = 1;
@@ -67,7 +73,8 @@
             // 
             this.resizeCheckbox.AutoSize = true;
             this.resizeCheckbox.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.resizeCheckbox.Location = new System.Drawing.Point(39, 85);
+            this.resizeCheckbox.Location = new System.Drawing.Point(39, 106);
+            this.resizeCheckbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.resizeCheckbox.Name = "resizeCheckbox";
             this.resizeCheckbox.Size = new System.Drawing.Size(75, 19);
             this.resizeCheckbox.TabIndex = 3;
@@ -78,7 +85,8 @@
             // opacitySlider
             // 
             this.opacitySlider.LargeChange = 10;
-            this.opacitySlider.Location = new System.Drawing.Point(91, 123);
+            this.opacitySlider.Location = new System.Drawing.Point(91, 154);
+            this.opacitySlider.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.opacitySlider.Maximum = 100;
             this.opacitySlider.Name = "opacitySlider";
             this.opacitySlider.Size = new System.Drawing.Size(239, 45);
@@ -90,7 +98,7 @@
             // 
             this.opacityTitleLabel.AutoSize = true;
             this.opacityTitleLabel.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.opacityTitleLabel.Location = new System.Drawing.Point(37, 123);
+            this.opacityTitleLabel.Location = new System.Drawing.Point(37, 154);
             this.opacityTitleLabel.Name = "opacityTitleLabel";
             this.opacityTitleLabel.Size = new System.Drawing.Size(48, 15);
             this.opacityTitleLabel.TabIndex = 4;
@@ -100,25 +108,67 @@
             // 
             this.opacityValueLabel.AutoSize = true;
             this.opacityValueLabel.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.opacityValueLabel.Location = new System.Drawing.Point(336, 123);
+            this.opacityValueLabel.Location = new System.Drawing.Point(336, 154);
             this.opacityValueLabel.Name = "opacityValueLabel";
             this.opacityValueLabel.Size = new System.Drawing.Size(38, 15);
             this.opacityValueLabel.TabIndex = 6;
             this.opacityValueLabel.Text = "100%";
             // 
+            // ffChatGroup
+            // 
+            this.ffChatGroup.Controls.Add(this.partyChatCheckbox);
+            this.ffChatGroup.Controls.Add(this.eventChatCheckbox);
+            this.ffChatGroup.Location = new System.Drawing.Point(40, 218);
+            this.ffChatGroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ffChatGroup.Name = "ffChatGroup";
+            this.ffChatGroup.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ffChatGroup.Size = new System.Drawing.Size(88, 89);
+            this.ffChatGroup.TabIndex = 7;
+            this.ffChatGroup.TabStop = false;
+            this.ffChatGroup.Text = "FFXIV Chat";
+            // 
+            // partyChatCheckbox
+            // 
+            this.partyChatCheckbox.AutoSize = true;
+            this.partyChatCheckbox.Location = new System.Drawing.Point(17, 52);
+            this.partyChatCheckbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.partyChatCheckbox.Name = "partyChatCheckbox";
+            this.partyChatCheckbox.Size = new System.Drawing.Size(53, 19);
+            this.partyChatCheckbox.TabIndex = 9;
+            this.partyChatCheckbox.Text = "Party";
+            this.partyChatCheckbox.UseVisualStyleBackColor = true;
+            this.partyChatCheckbox.CheckedChanged += new System.EventHandler(this.PartyChatCheckbox_CheckedChanged);
+            // 
+            // eventChatCheckbox
+            // 
+            this.eventChatCheckbox.AutoSize = true;
+            this.eventChatCheckbox.Location = new System.Drawing.Point(17, 25);
+            this.eventChatCheckbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.eventChatCheckbox.Name = "eventChatCheckbox";
+            this.eventChatCheckbox.Size = new System.Drawing.Size(55, 19);
+            this.eventChatCheckbox.TabIndex = 8;
+            this.eventChatCheckbox.Text = "Event";
+            this.eventChatCheckbox.UseVisualStyleBackColor = true;
+            this.eventChatCheckbox.CheckedChanged += new System.EventHandler(this.EventChatCheckbox_CheckedChanged);
+            // 
             // FFXIV_Translator
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ffChatGroup);
             this.Controls.Add(this.opacityValueLabel);
             this.Controls.Add(this.opacityTitleLabel);
             this.Controls.Add(this.opacitySlider);
             this.Controls.Add(this.resizeCheckbox);
             this.Controls.Add(this.dragCheckbox);
             this.Controls.Add(this.visibleCheckBox);
+            this.Font = new System.Drawing.Font("맑은 고딕", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FFXIV_Translator";
-            this.Size = new System.Drawing.Size(800, 450);
+            this.Size = new System.Drawing.Size(800, 562);
             ((System.ComponentModel.ISupportInitialize)(this.opacitySlider)).EndInit();
+            this.ffChatGroup.ResumeLayout(false);
+            this.ffChatGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -132,5 +182,8 @@
         private System.Windows.Forms.TrackBar opacitySlider;
         private System.Windows.Forms.Label opacityTitleLabel;
         private System.Windows.Forms.Label opacityValueLabel;
+        private System.Windows.Forms.GroupBox ffChatGroup;
+        private System.Windows.Forms.CheckBox eventChatCheckbox;
+        private System.Windows.Forms.CheckBox partyChatCheckbox;
     }
 }

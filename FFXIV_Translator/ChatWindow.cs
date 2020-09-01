@@ -22,6 +22,9 @@ namespace FFXIV_Translator
         private int MaxScrollPosition { get { return Math.Max(GetTotalHeight() - chatPanel.Height + scrollMargin, minScrollPosition); } }
 
         private PapagoAPI.LangCode langCode = PapagoAPI.LangCode.KR;
+        private readonly string chatFormat = "{0} : {1}";
+        private readonly Color defaultChatColor = Color.FromName("Highlight");
+        private readonly Color eventChatColor = Color.FromName("ForestGreen");
 
         // Hide from Alt+Tab
         // https://social.msdn.microsoft.com/Forums/windows/en-US/0eefb6f4-3619-4f7a-b144-48df80e2c603/how-to-hide-form-from-alttab-dialog?forum=winforms
@@ -83,12 +86,12 @@ namespace FFXIV_Translator
             UpdateLangBtn();
         }
 
-        private void AddChat(string msg, bool reposition = true)
+        private void AddChat(string msg, FFChatCode code, bool reposition = true)
         {
             if (string.IsNullOrEmpty(msg))
                 return;
 
-            Chat newChat = new Chat(msg, GetTextSize(msg));
+            Chat newChat = new Chat(msg, GetTextSize(msg), code);
             chats.Insert(0, newChat);
 
             scrollPosition = minScrollPosition;
@@ -144,6 +147,7 @@ namespace FFXIV_Translator
                             label.Location = new Point(0, y);
                             label.Size = chats[i].Size;
                             label.Text = chats[i].Str;
+                            label.ForeColor = GetForeColor(chats[i].Code);
                         }
                     }
                     else if (upperThreshold < 0)
@@ -151,6 +155,14 @@ namespace FFXIV_Translator
                 }
                 labelPool.EndReposition();
             }
+        }
+
+        private Color GetForeColor(FFChatCode code)
+        {
+            if (code == FFChatCode.Event)
+                return eventChatColor;
+
+            return defaultChatColor;
         }
 
         public void UpdateOpacity()
@@ -281,15 +293,15 @@ namespace FFXIV_Translator
                 int r = random.Next(3);
                 if (r == 0)
                 {
-                    AddChat("test string" + i, i == count);
+                    AddChat("test string" + i, FFChatCode.None, i == count);
                 }
                 else if (r == 1)
                 {
-                    AddChat("test stringdddddddddddddddddddddddddddddddddddddddddddddd" + i, i == count);
+                    AddChat("test stringdddddddddddddddddddddddddddddddddddddddddddddd" + i, FFChatCode.None, i == count);
                 }
                 else if (r == 2)
                 {
-                    AddChat("test string\nasdfasdf\nassf" + i, i == count);
+                    AddChat("test string\nasdfasdf\nassf" + i, FFChatCode.None, i == count);
                 }
             }
         }
@@ -311,12 +323,31 @@ namespace FFXIV_Translator
             langBtn.Text = langCode.ToString();
         }
 
-        private async void ExecuteBtn_Click(object sender, EventArgs e)
+        private void ExecuteBtn_Click(object sender, EventArgs e)
         {
-            string msg = await PapagoAPI.Translate(textBox.Text, langCode);
-
-            AddChat(msg);
+            Execute(textBox.Text);
             textBox.Text = string.Empty;
+        }
+
+        public async void Execute(string text)
+        {
+            if (Visible)
+            {
+                string msg = await PapagoAPI.Translate(text, langCode);
+
+                AddChat(msg, FFChatCode.None);
+            }
+        }
+
+        public async void Execute(string speaker, string text, FFChatCode code)
+        {
+            if (Visible)
+            {
+                string msg = await PapagoAPI.Translate(text, langCode);
+                string m = string.Format(chatFormat, speaker, msg);
+
+                AddChat(m, code);
+            }
         }
 
         private void ScrollBar_MouseMove(object sender, MouseEventArgs e)
