@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Advanced Combat Tracker">
-      <HintPath>..\..\..\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
+      <HintPath>..\..\..\..\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
     </Reference>
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
@@ -61,7 +61,6 @@
     <Compile Include="ChatWindow.Designer.cs">
       <DependentUpon>ChatWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="FFChatCode.cs" />
     <Compile Include="LabelPool.cs" />
     <Compile Include="MathExtension.cs" />
     <Compile Include="PapagoAPI\PapagoAPIException.cs" />

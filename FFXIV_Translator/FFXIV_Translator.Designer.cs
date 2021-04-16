@@ -34,11 +34,7 @@
             this.opacitySlider = new System.Windows.Forms.TrackBar();
             this.opacityTitleLabel = new System.Windows.Forms.Label();
             this.opacityValueLabel = new System.Windows.Forms.Label();
-            this.ffChatGroup = new System.Windows.Forms.GroupBox();
-            this.partyChatCheckbox = new System.Windows.Forms.CheckBox();
-            this.eventChatCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.opacitySlider)).BeginInit();
-            this.ffChatGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // visibleCheckBox
@@ -114,48 +110,10 @@
             this.opacityValueLabel.TabIndex = 6;
             this.opacityValueLabel.Text = "100%";
             // 
-            // ffChatGroup
-            // 
-            this.ffChatGroup.Controls.Add(this.partyChatCheckbox);
-            this.ffChatGroup.Controls.Add(this.eventChatCheckbox);
-            this.ffChatGroup.Location = new System.Drawing.Point(40, 218);
-            this.ffChatGroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ffChatGroup.Name = "ffChatGroup";
-            this.ffChatGroup.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ffChatGroup.Size = new System.Drawing.Size(88, 89);
-            this.ffChatGroup.TabIndex = 7;
-            this.ffChatGroup.TabStop = false;
-            this.ffChatGroup.Text = "FFXIV Chat";
-            // 
-            // partyChatCheckbox
-            // 
-            this.partyChatCheckbox.AutoSize = true;
-            this.partyChatCheckbox.Location = new System.Drawing.Point(17, 52);
-            this.partyChatCheckbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.partyChatCheckbox.Name = "partyChatCheckbox";
-            this.partyChatCheckbox.Size = new System.Drawing.Size(53, 19);
-            this.partyChatCheckbox.TabIndex = 9;
-            this.partyChatCheckbox.Text = "Party";
-            this.partyChatCheckbox.UseVisualStyleBackColor = true;
-            this.partyChatCheckbox.CheckedChanged += new System.EventHandler(this.PartyChatCheckbox_CheckedChanged);
-            // 
-            // eventChatCheckbox
-            // 
-            this.eventChatCheckbox.AutoSize = true;
-            this.eventChatCheckbox.Location = new System.Drawing.Point(17, 25);
-            this.eventChatCheckbox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.eventChatCheckbox.Name = "eventChatCheckbox";
-            this.eventChatCheckbox.Size = new System.Drawing.Size(55, 19);
-            this.eventChatCheckbox.TabIndex = 8;
-            this.eventChatCheckbox.Text = "Event";
-            this.eventChatCheckbox.UseVisualStyleBackColor = true;
-            this.eventChatCheckbox.CheckedChanged += new System.EventHandler(this.EventChatCheckbox_CheckedChanged);
-            // 
             // FFXIV_Translator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.ffChatGroup);
             this.Controls.Add(this.opacityValueLabel);
             this.Controls.Add(this.opacityTitleLabel);
             this.Controls.Add(this.opacitySlider);
@@ -167,8 +125,6 @@
             this.Name = "FFXIV_Translator";
             this.Size = new System.Drawing.Size(800, 562);
             ((System.ComponentModel.ISupportInitialize)(this.opacitySlider)).EndInit();
-            this.ffChatGroup.ResumeLayout(false);
-            this.ffChatGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -182,8 +138,5 @@
         private System.Windows.Forms.TrackBar opacitySlider;
         private System.Windows.Forms.Label opacityTitleLabel;
         private System.Windows.Forms.Label opacityValueLabel;
-        private System.Windows.Forms.GroupBox ffChatGroup;
-        private System.Windows.Forms.CheckBox eventChatCheckbox;
-        private System.Windows.Forms.CheckBox partyChatCheckbox;
     }
 }

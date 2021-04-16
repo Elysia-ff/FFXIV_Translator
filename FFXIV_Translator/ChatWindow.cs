@@ -10,8 +10,8 @@ namespace FFXIV_Translator
     public partial class ChatWindow : Form
     {
         private bool isActivated = false;
-        private LabelPool labelPool;
-        private List<Chat> chats = new List<Chat>();
+        private readonly LabelPool labelPool;
+        private readonly List<Chat> chats = new List<Chat>();
         private int scrollPosition = 0;
         private int prevScrollPosition = 0;
         public const int scrollMargin = 2;
@@ -35,6 +35,7 @@ namespace FFXIV_Translator
                 // Turn on WS_EX_TOOLWINDOW style bit
                 CreateParams cp = base.CreateParams;
                 cp.ExStyle |= 0x80;
+
                 return cp;
             }
         }
@@ -67,9 +68,11 @@ namespace FFXIV_Translator
                 if (pos.X >= this.ClientSize.Width - cGrip && pos.Y >= this.ClientSize.Height - cGrip && Settings.Default.Resizable)
                 {
                     m.Result = (IntPtr)17; // HTBOTTOMRIGHT
+
                     return;
                 }
             }
+
             base.WndProc(ref m);
         }
 
@@ -81,23 +84,30 @@ namespace FFXIV_Translator
             labelPool = new LabelPool(chatPanel);
             int savedCode = Settings.Default.LangCode;
             if (savedCode < 0 || savedCode >= (int)PapagoAPI.LangCode.Count)
+            {
                 savedCode = 0;
+            }
+
             langCode = (PapagoAPI.LangCode)savedCode;
             UpdateLangBtn();
         }
 
-        private void AddChat(string msg, FFChatCode code, bool reposition = true)
+        private void AddChat(string msg, bool reposition = true)
         {
             if (string.IsNullOrEmpty(msg))
                 return;
 
-            Chat newChat = new Chat(msg, GetTextSize(msg), code);
+            Chat newChat = new Chat(msg, GetTextSize(msg));
             chats.Insert(0, newChat);
 
             scrollPosition = minScrollPosition;
             prevScrollPosition = scrollPosition;
+
             if (reposition)
+            {
                 Reposition();
+            }
+
             UpdateScrollBarSize();
         }
 
@@ -139,6 +149,11 @@ namespace FFXIV_Translator
                     prevY = y;
 
                     int upperThreshold = y + chats[i].Height;
+                    if (upperThreshold < 0)
+                    {
+                        break;
+                    }
+
                     if (upperThreshold >= 0 && y <= chatPanel.Height)
                     {
                         Label label = labelPool.GetLabel();
@@ -147,22 +162,13 @@ namespace FFXIV_Translator
                             label.Location = new Point(0, y);
                             label.Size = chats[i].Size;
                             label.Text = chats[i].Str;
-                            label.ForeColor = GetForeColor(chats[i].Code);
+                            label.ForeColor = defaultChatColor;
                         }
                     }
-                    else if (upperThreshold < 0)
-                        break;
                 }
+
                 labelPool.EndReposition();
             }
-        }
-
-        private Color GetForeColor(FFChatCode code)
-        {
-            if (code == FFChatCode.Event)
-                return eventChatColor;
-
-            return defaultChatColor;
         }
 
         public void UpdateOpacity()
@@ -259,7 +265,9 @@ namespace FFXIV_Translator
         private void ChatPanel_MouseWheel(object sender, MouseEventArgs e)
         {
             if (e.Delta == 0 || chats.Count <= 0)
+            {
                 return;
+            }
 
             if (e.Delta > 0)
             {
@@ -272,9 +280,15 @@ namespace FFXIV_Translator
 
             int maxScrollPosition = MaxScrollPosition;
             if (scrollPosition < minScrollPosition)
+            {
                 scrollPosition = minScrollPosition;
+            }
+
             if (scrollPosition > maxScrollPosition)
+            {
                 scrollPosition = maxScrollPosition;
+            }
+
             prevScrollPosition = scrollPosition;
 
             Reposition();
@@ -284,8 +298,7 @@ namespace FFXIV_Translator
 #if DEBUG
         private void ChatPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            // test code 
-            return;
+            // HACK :: test code 
             Random random = new Random();
             int count = 5000;
             for (int i = 1; i <= count; ++i)
@@ -293,15 +306,15 @@ namespace FFXIV_Translator
                 int r = random.Next(3);
                 if (r == 0)
                 {
-                    AddChat("test string" + i, FFChatCode.None, i == count);
+                    AddChat("test string" + i, i == count);
                 }
                 else if (r == 1)
                 {
-                    AddChat("test stringdddddddddddddddddddddddddddddddddddddddddddddd" + i, FFChatCode.None, i == count);
+                    AddChat("test stringdddddddddddddddddddddddddddddddddddddddddddddd" + i, i == count);
                 }
                 else if (r == 2)
                 {
-                    AddChat("test string\nasdfasdf\nassf" + i, FFChatCode.None, i == count);
+                    AddChat("test string\nasdfasdf\nassf" + i, i == count);
                 }
             }
         }
@@ -311,7 +324,9 @@ namespace FFXIV_Translator
         {
             langCode += 1;
             if (langCode >= PapagoAPI.LangCode.Count)
+            {
                 langCode = 0;
+            }
 
             UpdateLangBtn();
             Settings.Default.LangCode = (int)langCode;
@@ -335,18 +350,18 @@ namespace FFXIV_Translator
             {
                 string msg = await PapagoAPI.Translate(text, langCode);
 
-                AddChat(msg, FFChatCode.None);
+                AddChat(msg);
             }
         }
 
-        public async void Execute(string speaker, string text, FFChatCode code)
+        public async void Execute(string speaker, string text)
         {
             if (Visible)
             {
                 string msg = await PapagoAPI.Translate(text, langCode);
                 string m = string.Format(chatFormat, speaker, msg);
 
-                AddChat(m, code);
+                AddChat(m);
             }
         }
 
@@ -357,20 +372,28 @@ namespace FFXIV_Translator
                 Point point = scrollBar.Location;
                 point.Y = scrollBarPanel.PointToClient(Cursor.Position).Y - (int)(scrollBar.Height * 0.5f);
                 if (point.Y < 0)
+                {
                     point.Y = 0;
+                }
                 else if (point.Y + scrollBar.Height > scrollBarPanel.Height)
+                {
                     point.Y = scrollBarPanel.Height - scrollBar.Height;
+                }
 
                 float t = 1 - (float)point.Y / (scrollBarPanel.Height - scrollBar.Height);
-                if (float.IsNaN(t)) t = 1;
-                int newScrollPosition = (int)Math.Ceiling(MathExtension.Lerp(minScrollPosition, MaxScrollPosition, t));
+                if (float.IsNaN(t))
+                {
+                    t = 1;
+                }
 
+                int newScrollPosition = (int)Math.Ceiling(MathExtension.Lerp(minScrollPosition, MaxScrollPosition, t));
                 if (MathExtension.Distance(newScrollPosition, prevScrollPosition) >= scrollDelta)
                 {
                     using (new SuspendLayoutScope(scrollBar, false))
                     {
                         scrollBar.Location = point;
                     }
+
                     scrollPosition = newScrollPosition;
                     prevScrollPosition = scrollPosition;
 
@@ -384,11 +407,13 @@ namespace FFXIV_Translator
             using (new SuspendLayoutScope(scrollBar, false))
             {
                 float t = 1 - (float)scrollPosition / MaxScrollPosition;
-                if (float.IsNaN(t)) t = 1;
-                int v = (int)Math.Ceiling(MathExtension.Lerp(0, scrollBarPanel.Height - scrollBar.Height, t));
+                if (float.IsNaN(t))
+                {
+                    t = 1;
+                }
 
                 Point point = scrollBar.Location;
-                point.Y = v;
+                point.Y = (int)Math.Ceiling(MathExtension.Lerp(0, scrollBarPanel.Height - scrollBar.Height, t));
                 scrollBar.Location = point;
             }
         }

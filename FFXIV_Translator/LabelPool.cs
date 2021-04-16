@@ -6,11 +6,11 @@ namespace FFXIV_Translator
 {
     public class LabelPool
     {
-        private List<Label> pool = new List<Label>();
+        private readonly List<Label> pool = new List<Label>();
         private int idx = 0;
 
-        private Control parent;
-        private Size defaultSize;
+        private readonly Control parent;
+        private readonly Size defaultSize;
         private const int poolInitialCount = 10;
 
         public LabelPool(Control _parent)
@@ -61,6 +61,7 @@ namespace FFXIV_Translator
                 {
                     pool[i].Visible = true;
                 }
+
                 return pool[i];
             }
 

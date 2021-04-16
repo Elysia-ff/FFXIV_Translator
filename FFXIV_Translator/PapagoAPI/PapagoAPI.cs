@@ -22,18 +22,6 @@ namespace FFXIV_Translator.PapagoAPIs
             Count
         }
 
-        public static async Task<string> Translate(string text, LangCode source, LangCode target)
-        {
-            try
-            {
-                return await Translate(text, LangCodeToString(source), LangCodeToString(target));
-            }
-            catch (PapagoAPIException e)
-            {
-                return e.Message;
-            }
-        }
-
         private static async Task<string> Translate(string text, string source, string target)
         {
             text = text.Replace("\r\n", " \\n ");
@@ -43,7 +31,7 @@ namespace FFXIV_Translator.PapagoAPIs
             request.Headers.Add("X-Naver-Client-Secret", clientSecret);
             request.Method = "POST";
 
-            byte[] byteDataParams = Encoding.UTF8.GetBytes("source=" + source + "&target=" + target + "&text=" + text);
+            byte[] byteDataParams = Encoding.UTF8.GetBytes($"source={source}&target={target}&text={text}");
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = byteDataParams.Length;
             Stream st = request.GetRequestStream();
@@ -62,17 +50,13 @@ namespace FFXIV_Translator.PapagoAPIs
                     //{"message":{"@type":"response","@service":"naverservice.nmt.proxy","@version":"1.0.0","result":{"srcLangType":"ko","tarLangType":"en","translatedText":"Hello","engineType":"PRETRANS","pivot":null}}}
                 }
             }
-            catch (WebException e)
+            catch (WebException e) when ((int)(e.Response as HttpWebResponse).StatusCode == 429)
             {
-                HttpWebResponse response = e.Response as HttpWebResponse;
-                if ((int)response.StatusCode == 429)
-                {
-                    throw new PapagoAPIException("하루 or 초당 호출 한도를 초과했습니다.");
-                }
-                else
-                {
-                    throw new PapagoAPIException(e.Message);
-                }
+                throw new PapagoAPIException("하루 or 초당 호출 한도를 초과했습니다.");
+            }
+            catch (Exception e)
+            {
+                throw new PapagoAPIException(e.Message);
             }
         }
 
@@ -94,9 +78,15 @@ namespace FFXIV_Translator.PapagoAPIs
             {
                 string source = await Detect(text);
                 if (source.Equals(target) || source.Equals("unk"))
+                {
                     return text;
-                if (!TryStringToLangCode(source, out LangCode code))
+                }
+
+                LangCode code = StringToLangCode(source);
+                if (code == LangCode.None)
+                {
                     return text;
+                }
 
                 return await Translate(text, source, target);
             }
@@ -113,7 +103,7 @@ namespace FFXIV_Translator.PapagoAPIs
             request.Headers.Add("X-Naver-Client-Secret", clientSecret);
             request.Method = "POST";
 
-            byte[] byteDataParams = Encoding.UTF8.GetBytes("query=" + text);
+            byte[] byteDataParams = Encoding.UTF8.GetBytes($"query={text}");
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = byteDataParams.Length;
             Stream st = request.GetRequestStream();
@@ -132,21 +122,17 @@ namespace FFXIV_Translator.PapagoAPIs
                     //{"langCode":"ko"}
                 }
             }
-            catch (WebException e)
+            catch (WebException e) when ((int)(e.Response as HttpWebResponse).StatusCode == 429)
             {
-                HttpWebResponse response = e.Response as HttpWebResponse;
-                if ((int)response.StatusCode == 429)
-                {
-                    throw new PapagoAPIException("하루 or 초당 호출 한도를 초과했습니다.");
-                }
-                else
-                {
-                    throw new PapagoAPIException(e.Message);
-                }
+                throw new PapagoAPIException("하루 or 초당 호출 한도를 초과했습니다.");
+            }
+            catch (Exception e)
+            {
+                throw new PapagoAPIException(e.Message);
             }
         }
 
-        public static string LangCodeToString(LangCode code)
+        private static string LangCodeToString(LangCode code)
         {
             switch (code)
             {
@@ -161,7 +147,7 @@ namespace FFXIV_Translator.PapagoAPIs
             }
         }
 
-        public static LangCode StringToLangCode(string str)
+        private static LangCode StringToLangCode(string str)
         {
             str = str.ToLower();
             switch (str)
@@ -173,23 +159,8 @@ namespace FFXIV_Translator.PapagoAPIs
                 case "ja":
                     return LangCode.JP;
                 default:
-                    throw new NotImplementedException();
+                    return LangCode.None;
             }
-        }
-
-        public static bool TryStringToLangCode(string str, out LangCode code)
-        {
-            try
-            {
-                code = StringToLangCode(str);
-            }
-            catch
-            {
-                code = LangCode.None;
-                return false;
-            }
-
-            return true;
         }
     }
 }
